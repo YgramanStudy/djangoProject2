@@ -1,0 +1,70 @@
+{% extends '_Layout.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block linkstyle %}
+    <link type="text/css" href="{% static 'css/course_style.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block body %}
+    {% if course %}
+        <main class="main_course_container">
+            <div class="video_container">
+
+                <video controls autoplay muted preload="metadata">
+                    {% if default_video %}
+                        <source src="{{default_video.asset.resource.stream.url }}" type="{{ default_video.asset.resource.stream.mime }}">
+                    {% else %}
+                        <source src="{{course.chapters.asset.resource.stream.url }}" type="{{ course.chapters.asset.resource.stream.mime }}">
+                    {% endif %}
+                </video>
+
+            </div>
+            <div class="headline_video_list_container">
+                <div class="headline_container">
+                    <h4 >{{ course.headline}}</h4>
+                    <div class="background_shape">
+                        <img class="achievement" src="{% static 'icons/Vector.svg' %}" alt="achievement">
+                        <p>0/{{course.chapters|length }}</p>
+                    </div>
+                </div>
+
+                <div class="video_list_container">
+                    <table style="height: 100%">
+                        {% for chapter in course.chapters %}
+
+                            <tr class="element">
+                                {% if not watched %}
+                                    <td>
+                                        <div class="circle">
+                                            <div class="triangle"></div>
+                                        </div>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <img class="cheked" src="{% static 'icons/Stroke 3.svg' %}" alt="cheked">
+                                    </td>
+                                {% endif %}
+                                    <td>
+                                        {{ forloop.counter }}.
+                                    </td>
+                                    <td>
+                                            {{ chapter.title }}
+                                        </td>
+                                    <td style="text-align:right">
+                                        {{ chapter.asset.resource.duration }}
+                                    </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+    {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends '_Layout.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block linkstyle %}
+    <link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block body %}
+    <main class="main_container">
+        <header class="header_container">
+            <h1 class="header_title">
+                BIGVU 101  Crash Course
+            </h1>
+            <p class="header_text">
+                Zero editing experience to pro — your journey starts here. <br class="desktop">
+                Watch step-by-step video lessons how to make videos with impact.
+            </p>
+        </header>
+
+        <div class="cards_container">
+            {% if data %}
+                {% for course in data %}
+                    {% with counter=forloop.counter  %}
+                    <div class="card_container">
+                        <h2 class="headline headline{{ counter }}">{{ course.headline }}</h2>
+                        <div class="card_wrapper">
+                            <div class="clickable_div" onclick="location.href='{% url 'course' course.id %}'"></div>
+                            <div class="card">
+                                {% if forloop.counter == 1 %}
+                                    <img class="card_decoration" src="{% static 'vectors/v1.svg' %}" alt="vector">
+                                {% elif forloop.counter == 2 %}
+                                    <img class="card_decoration" src="{% static 'vectors/v2.svg' %}" alt="vector">
+                                {% else %}
+                                    <img class="card_decoration" src="{% static 'vectors/v3.svg' %}" alt="vector">
+                                {% endif %}
+
+                                <div class="videos_num_container">
+                                    <img class="camera" src="{% static 'icons/video Filled.svg' %}" alt="camera">
+                                    <p class="videos_num_text">{{ course.amount_of_videos  }} videos</p>
+
+                                </div>
+                                <div class="card_content_container">
+                                    <h3 class="card_description">{{ course.description }}</h3>
+
+                                    <table class="table">
+                                        <th>
+                                            <ul class="summary_list">
+                                            {% for text in course.summary %}
+                                                {% if forloop.counter <= 4  %}
+                                                    <li class="list_item"><span class="dot grad{{ counter }}"></span>{{ text }}</li>
+                                                {% endif %}
+                                                {% if forloop.counter == 2 %}
+                                                    </ul></th><th><ul class="summary_list">
+                                                {% endif %}
+                                            {% endfor %}
+                                            </ul>
+                                        </th>
+                                    </table>
+                                    <a class="arrow_link" href="{% url 'course' course.id %}">
+                                        <img class="arrow" src="{% static 'icons/Vector 11.svg' %}" alt="Vector 11">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </main>
+
+
+
+
+
+
+
+
+
+
+{#<div class="text">#}
+{#    <h1 >BIGVU 101  Crash Course</h1>#}
+{#    <p class="test">#}
+{#        Zero editing experience to pro — your journey starts here.#}
+{#        Watch step-by-step video lessons how to make videos with impact.#}
+{#    </p>#}
+{##}
+{#    <div class="frames">#}
+{#        <div class="group">#}
+{#            <h6 class="headline" id="headline1">Craft your message</h6>#}
+{#            <div class="frame">#}
+{#                <div class="rectangel">#}
+{#                    <img class="camera" src="{% static 'icons/video Filled.svg' %}" alt="video Filled">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="group">#}
+{#            <h6 class="headline" id="headline2">Style your Video</h6>#}
+{#            <div class="frame">#}
+{#                <div class="rectangel">#}
+{#                    <img class="camera" src="icons/video Filled.svg" alt="video Filled">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="group">#}
+{#            <h6 class="headline" id="headline3">Reach Your Audience</h6>#}
+{#            <div class="frame">#}
+{#                <div class="rectangel">#}
+{#                    <img class="camera" src="icons/video Filled.svg" alt="video Filled">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#</div>#}
+
+{#<div class="form-horizontal">#}
+{##}
+{#    <hr />#}
+{#    <div class="form-group">#}
+{##}
+{##}
+{#        <table class="table table-responsive" style="width:400px">#}
+{#            <tr>#}
+{#                <th>#}
+{#                    text#}
+{#                </th>#}
+{#                <th>#}
+{#                    tex t1#}
+{#                </th>#}
+{##}
+{#            </tr>#}
+{#            {% if data %}#}
+{#                {% for course in data %}#}
+{##}
+{#                    <tr>#}
+{##}
+{#                        <td>#}
+{#                            <p>{{ course.id }}</p>#}
+{#                        </td>#}
+{#                        <td>#}
+{#                            <p>{{ course.headline }}</p>#}
+{#                        </td>#}
+{##}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#            {% endif %}#}
+{##}
+{#        </table>#}
+{#    </div>#}
+{#</div>#}
+        {% endblock %}

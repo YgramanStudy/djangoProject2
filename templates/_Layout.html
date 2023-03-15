@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{#    <link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet">#}
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    {% block linkstyle %}
+        <link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet">
+{#        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>#}
+    {% endblock %}
+    <title>{% block title %}TEMP TITLE{% endblock %}</title>
+    <style>{% block style %}{% endblock %}</style>
+</head>
+<body>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>
