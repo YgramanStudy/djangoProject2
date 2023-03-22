@@ -4,6 +4,7 @@ import urllib, json
 from django.http import HttpResponse
 import requests
 import datetime
+from django.core.cache import cache
 import re
 
 
@@ -12,37 +13,64 @@ import re
 
 
 def home(request):
-    # print()
-    # print("user check")
-    # print(request.user.username)
-    # print(request.user.id)
+    print("-----home-------")
+    data = cache.get('data')
+    if data is None:
+        print("-----cache-------")
+        data = requests.get('https://interviews.bigvu.tv/course/list', auth=('bigvu', 'interview')).json()
+        cache.set('data', data)
+    # response = requests.get('https://interviews.bigvu.tv/course/list', auth=('bigvu', 'interview'))
+    # data = response.json()
+    print(data)
+    try:
+        data = data['result']
+    except:
+        pass
 
-    # return render(request, "../templates/HomePage.html")
-
-    # with urllib.request.urlopen("https://interviews.bigvu.tv/course/list") as url:
-    #     data = json.load(url)
-    #     print(data)
-    response = requests.get('https://interviews.bigvu.tv/course/list', auth=('bigvu', 'interview'))
-    data = response.json()
-    # print(data)
-    for course in data["result"]:
-        response = requests.get('https://interviews.bigvu.tv/course/' + str(course['id']), auth=('bigvu', 'interview'))
-        course["amount_of_videos"] = len(response.json())
+    for temp_course in data:
+        response = requests.get('https://interviews.bigvu.tv/course/' + str(temp_course['id']), auth=('bigvu', 'interview'))
+        temp_course["amount_of_videos"] = len(response.json())
 
 
-    print(data["result"])
+    # print(data["result"])
 
 
     # return HttpResponse(data["result"])
-    return render(request, "../templates/HomePage.html", {"data": data["result"]})
+    return render(request, "../templates/HomePage.html", {"data": data})
 
 
 def course(request, question_id):
     chapters = list()
-    response = requests.get('https://interviews.bigvu.tv/course/'+str(question_id), auth=('bigvu', 'interview'))
-    data = response.json()
-    print(data)
-    for chapter in data['chapters']:
+
+    print("-----course-------")
+    course = cache.get('course')
+    try:
+        course = course['result'][0]
+    except:
+        pass
+    if course:
+        print(course)
+        if course['id'] != question_id:
+            course = requests.get('https://interviews.bigvu.tv/course/' + str(question_id),
+                            auth=('bigvu', 'interview')).json()
+            cache.set('course', course)
+
+    if course is None:
+        print("-----cache-------")
+        course = requests.get('https://interviews.bigvu.tv/course/'+str(question_id), auth=('bigvu', 'interview')).json()
+        cache.set('data', course)
+
+    # response = requests.get('https://interviews.bigvu.tv/course/'+str(question_id), auth=('bigvu', 'interview'))
+    # data = response.json()
+
+    try:
+        course = course['result'][0]
+    except:
+        pass
+
+
+    print(course)
+    for chapter in course['chapters']:
         # my_new_string = re.sub('[!?]', "", my_string)
         duration = datetime.timedelta(seconds=chapter["asset"]['resource']['duration'])
 
@@ -56,7 +84,7 @@ def course(request, question_id):
 
         chapters.append(chapter)
 
-    default_video = data['chapters'][0]
+    default_video = course['chapters'][0]
 
 
-    return render(request, "../templates/CoursePage.html", {"course": data,"default_video": default_video})
+    return render(request, "../templates/CoursePage.html", {"course": course,"default_video": default_video})

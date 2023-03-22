@@ -1,65 +1,57 @@
 {% extends '_Layout.html' %}
+{% load cache %}
 {% load static %}
 
 {% block title %}Home{% endblock %}
 
 {% block linkstyle %}
-    <link type="text/css" href="{% static 'css/course_style.css' %}" rel="stylesheet">
-{% endblock %}
+{#        <link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet">#}
+        <link type="text/css" href="{% static 'css/coursestyle.css' %}" rel="stylesheet">
+    {% endblock %}
 
+{% cache 500 course %}
 
 {% block body %}
     {% if course %}
-        <main class="main_course_container">
+        <main class="main_container">
             <div class="video_container">
+                {% for chapter in course.chapters %}
+                <video class="video" id="myVideo" controls autoplay muted preload="metadata">
 
-                <video controls autoplay muted preload="metadata">
                     {% if default_video %}
                         <source src="{{default_video.asset.resource.stream.url }}" type="{{ default_video.asset.resource.stream.mime }}">
                     {% else %}
                         <source src="{{course.chapters.asset.resource.stream.url }}" type="{{ course.chapters.asset.resource.stream.mime }}">
                     {% endif %}
                 </video>
+                {% endfor %}
 
             </div>
-            <div class="headline_video_list_container">
-                <div class="headline_container">
-                    <h4 >{{ course.headline}}</h4>
-                    <div class="background_shape">
-                        <img class="achievement" src="{% static 'icons/Vector.svg' %}" alt="achievement">
-                        <p>0/{{course.chapters|length }}</p>
+            <div class="playlist_container">
+                <div class="header_container">
+                    <h4 class="header_title">{{ course.headline}}</h4>
+                    <div class="award_container">
+                        <img class="award_icon" src="{% static 'icons/Vector.svg' %}" alt="award">
+                        <p class="progress">0/{{course.chapters|length }}</p>
                     </div>
                 </div>
-
-                <div class="video_list_container">
-                    <table style="height: 100%">
-                        {% for chapter in course.chapters %}
-
-                            <tr class="element">
-                                {% if not watched %}
-                                    <td>
-                                        <div class="circle">
-                                            <div class="triangle"></div>
-                                        </div>
-                                    </td>
-                                {% else %}
-                                    <td>
-                                        <img class="cheked" src="{% static 'icons/Stroke 3.svg' %}" alt="cheked">
-                                    </td>
-                                {% endif %}
-                                    <td>
-                                        {{ forloop.counter }}.
-                                    </td>
-                                    <td>
-                                            {{ chapter.title }}
-                                        </td>
-                                    <td style="text-align:right">
-                                        {{ chapter.asset.resource.duration }}
-                                    </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+                        <ul class="playlist">
+                            {% for chapter in course.chapters %}
+                            <a onclick="(event) => { event.target.classList.add('active'); event.target.parentElement.children.forEach(linkElement => { if(linkElement !== event.target){ linkElement.classList.remove('active');  } }) }">
+                                <li class="playlist_item">
+                                    <div class="playlist_item_title_container">
+                                        <img class="playlist_item_icon" src="../static/icons/play.png" alt="status" />
+                                        <p class="playlist_item_title">
+                                            {{ forloop.counter }}:{{ chapter.title }}
+                                        </p>
+                                    </div>
+                                        <p class="playlist_item_duration">
+                                            {{ chapter.asset.resource.duration }}
+                                        </p>
+                                </li>
+                            </a>
+                            {% endfor %}
+                        </ul>
             </div>
 
         </main>
@@ -67,4 +59,17 @@
     {% endif %}
 
 
+
+<script>
+    let vid = document.getElementById("myVideo");
+
+    function getCurTime() {
+        alert(vid.currentTime);
+    }
+
+    function setCurTime() {
+        vid.currentTime=30;
+    }
+</script>
 {% endblock %}
+{% endcache %}

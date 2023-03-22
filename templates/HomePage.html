@@ -1,14 +1,17 @@
 {% extends '_Layout.html' %}
 {% load static %}
+{% load cache %}
 
 {% block title %}Home{% endblock %}
 
 {% block linkstyle %}
-    <link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet">
-{% endblock %}
+        <link type="text/css" href="{% static 'css/style.css' %}" rel="stylesheet">
+{#        <link type="text/css" href="{% static 'css/coursestyle.css' %}" rel="stylesheet">#}
+    {% endblock %}
 
-
+{% cache 500 course %}
 {% block body %}
+
     <main class="main_container">
         <header class="header_container">
             <h1 class="header_title">
@@ -71,85 +74,5 @@
             {% endif %}
         </div>
     </main>
-
-
-
-
-
-
-
-
-
-
-{#<div class="text">#}
-{#    <h1 >BIGVU 101  Crash Course</h1>#}
-{#    <p class="test">#}
-{#        Zero editing experience to pro — your journey starts here.#}
-{#        Watch step-by-step video lessons how to make videos with impact.#}
-{#    </p>#}
-{##}
-{#    <div class="frames">#}
-{#        <div class="group">#}
-{#            <h6 class="headline" id="headline1">Craft your message</h6>#}
-{#            <div class="frame">#}
-{#                <div class="rectangel">#}
-{#                    <img class="camera" src="{% static 'icons/video Filled.svg' %}" alt="video Filled">#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="group">#}
-{#            <h6 class="headline" id="headline2">Style your Video</h6>#}
-{#            <div class="frame">#}
-{#                <div class="rectangel">#}
-{#                    <img class="camera" src="icons/video Filled.svg" alt="video Filled">#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="group">#}
-{#            <h6 class="headline" id="headline3">Reach Your Audience</h6>#}
-{#            <div class="frame">#}
-{#                <div class="rectangel">#}
-{#                    <img class="camera" src="icons/video Filled.svg" alt="video Filled">#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{##}
-{#</div>#}
-
-{#<div class="form-horizontal">#}
-{##}
-{#    <hr />#}
-{#    <div class="form-group">#}
-{##}
-{##}
-{#        <table class="table table-responsive" style="width:400px">#}
-{#            <tr>#}
-{#                <th>#}
-{#                    text#}
-{#                </th>#}
-{#                <th>#}
-{#                    tex t1#}
-{#                </th>#}
-{##}
-{#            </tr>#}
-{#            {% if data %}#}
-{#                {% for course in data %}#}
-{##}
-{#                    <tr>#}
-{##}
-{#                        <td>#}
-{#                            <p>{{ course.id }}</p>#}
-{#                        </td>#}
-{#                        <td>#}
-{#                            <p>{{ course.headline }}</p>#}
-{#                        </td>#}
-{##}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#            {% endif %}#}
-{##}
-{#        </table>#}
-{#    </div>#}
-{#</div>#}
-        {% endblock %}
+{% endblock %}
+{% endcache %}
